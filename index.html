@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerar Orçamento</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Gerar Orçamento</h1>
+    <form action="/atualizar_word" method="POST" class="needs-validation" novalidate>
+        <!-- Dados do Cliente -->
+        <h4 class="mt-4">Dados do Cliente</h4>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="nome" class="form-label">Nome do Cliente</label>
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome" required>
+                <div class="invalid-feedback">Por favor, insira o nome do cliente.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="endereco" class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Digite o endereço" required>
+                <div class="invalid-feedback">Por favor, insira o endereço.</div>
+            </div>
+        </div>
+        <!-- Dados Adicionais -->
+        <h4 class="mt-4">Dados Adicionais</h4>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="dias" class="form-label">Dias</label>
+                <input type="number" class="form-control" id="dias" name="dias" placeholder="Informe os dias" required>
+                <div class="invalid-feedback">Por favor, insira os dias.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="n_pedido" class="form-label">Número do Pedido</label>
+                <input type="text" class="form-control" id="n_pedido" name="n_pedido" placeholder="Digite o número do pedido" required>
+                <div class="invalid-feedback">Por favor, insira o número do pedido.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="data_atual" class="form-label">Data Atual</label>
+                <input type="text" class="form-control" id="data_atual" name="data_atual" value="data_atual" readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="data_prevista" class="form-label">Data Prevista</label>
+                <input type="date" class="form-control" id="data_prevista" name="data_prevista" required>
+                <div class="invalid-feedback">Por favor, insira a data prevista.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="data_vencimento" class="form-label">Data de Vencimento</label>
+                <input type="date" class="form-control" id="data_vencimento" name="data_vencimento" required>
+                <div class="invalid-feedback">Por favor, insira a data de vencimento.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
+                <input type="text" class="form-control" id="forma_pagamento" name="forma_pagamento" placeholder="Digite a forma de pagamento" required>
+                <div class="invalid-feedback">Por favor, insira a forma de pagamento.</div>
+            </div>
+        </div>
+        <!-- Tabela de Itens -->
+        <h4 class="mt-4">Itens do Pedido</h4>
+        <div id="items-container">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label for="codigo" class="form-label">Código</label>
+                    <input type="text" class="form-control" name="codigo[]" placeholder="Ex: 001" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <input type="text" class="form-control" name="descricao[]" placeholder="Descrição do produto" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="unidade" class="form-label">Un.</label>
+                    <input type="text" class="form-control" name="un[]" placeholder="Ex: un" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="quantidade" class="form-label">Qtd.</label>
+                    <input type="number" class="form-control" name="qtd[]" placeholder="Ex: 2" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="valor_unitario" class="form-label">Valor Unit.</label>
+                    <input type="number" step="0.01" class="form-control" name="valor_unit[]" placeholder="Ex: 150.00" required>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary mt-3" id="add-item">Adicionar Item</button>
+        <!-- Botão de Submissão -->
+        <button type="submit" class="btn btn-primary mt-4">Salvar Alterações</button>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Adicionar novos itens dinamicamente
+    document.getElementById('add-item').addEventListener('click', () => {
+        const container = document.getElementById('items-container');
+        const itemRow = `
+        <div class="row g-3 align-items-end mt-3">
+            <div class="col-md-2"><input type="text" class="form-control" name="codigo[]" placeholder="Ex: 001" required></div>
+            <div class="col-md-4"><input type="text" class="form-control" name="descricao[]" placeholder="Descrição do produto" required></div>
+            <div class="col-md-2"><input type="text" class="form-control" name="un[]" placeholder="Ex: un" required></div>
+            <div class="col-md-2"><input type="number" class="form-control" name="qtd[]" placeholder="Ex: 2" required></div>
+            <div class="col-md-2"><input type="number" step="0.01" class="form-control" name="valor_unit[]" placeholder="Ex: 150.00" required></div>
+        </div>`;
+        container.insertAdjacentHTML('beforeend', itemRow);
+    });
+
+
+</script>
+<script>
+    // Obter a data atual no formato dd/MM/aaaa
+    const hoje = new Date();
+    const dataAtualFormatada = hoje.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    document.getElementById('data_atual').value = dataAtualFormatada;
+ </script>
+</body>
+</html>
