@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, send_from_directory
 from docx import Document
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
@@ -79,6 +80,8 @@ def editar_word(arquivo_entrada, arquivo_saida, nome, endereco, dias, numero_ped
         doc.save(arquivo_saida)
     except Exception as e:
         raise RuntimeError(f"Erro no processo de edição do Word: {e}")
+
+os.makedirs("static/outputs", exist_ok=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
